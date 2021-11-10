@@ -1,11 +1,31 @@
 import pkg from "sequelize";
 const { Sequelize, DataTypes } = pkg;
-const sequelize = new Sequelize("postgres::memory:");
+const user = "postgres";
+const host = "localhost";
+const database = "thePantry";
+const port = "5432";
+
+const sequelize = new Sequelize(database, user, process.env.DBPASS, {
+  host,
+  port,
+  dialect: "postgres",
+  logging: false,
+});
+try {
+  await sequelize.authenticate();
+} catch (error) {
+  console.error("Unable to connect to the database:".bgRed.black, error);
+}
 
 const userSchema = sequelize.define(
   "User",
   {
     // Model attributes are defined here
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,14 +56,7 @@ const userSchema = sequelize.define(
   }
 );
 
-userSchema.beforeCreate("save", async function (next) {
-  if (!this.isModified("password")) {
-    next();
-  }
-  const salt = await bcyrpt.genSalt(10);
-  this.password = await bcyrpt.hash(this.password, salt);
-});
-
 const User = sequelize.model("User", userSchema);
+User.sync();
 
 export default User;

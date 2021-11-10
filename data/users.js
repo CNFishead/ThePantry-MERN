@@ -1,21 +1,31 @@
 import bcrypt from "bcrypt";
+import { hashPassword } from "../utils/hashPassword.js";
 
 const users = [
   {
-    name: "Admin-User",
+    firstName: "Admin",
+    lastName: "User",
     email: "admin@admin.com",
-    password: bcrypt.hashSync("password", 10),
+    password: await hashPassword("password"),
     isAdmin: true,
   },
   {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    password: bcrypt.hashSync("password", 10),
+    firstName: "John",
+    lastName: "Doe",
+    email: "johndoe@test.com",
+    password: await hashPassword("password"),
   },
   {
-    name: "Jane Doe",
-    email: "janedoe@example.com",
-    password: bcrypt.hashSync("password", 10),
+    firstName: "Jane",
+    lastName: "Doe",
+    email: "janedoe@test.com",
+    password: await hashPassword("password"),
+  },
+  {
+    firstName: "Some",
+    lastName: "Guy",
+    email: "some@guy.com",
+    password: await hashPassword("password"),
   },
 ];
 
